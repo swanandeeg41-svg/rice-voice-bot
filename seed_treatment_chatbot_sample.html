@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seed Treatment Chatbot - Sample</title>
+<style>
+    body { font-family: Arial, sans-serif; background: #f2f2f2; padding: 20px; }
+    .chat-box { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .question { font-weight: bold; color: #333; }
+    .answer { color: green; margin-bottom: 15px; }
+    button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #218838; }
+</style>
+</head>
+<body>
+
+<div class="chat-box">
+    <h2>🌾 बीज प्रक्रिया सहाय्यक</h2>
+    <p>🎤 प्रश्न विचारण्यासाठी खालील बटणावर क्लिक करा</p>
+    <button onclick="startListening()">🎙 प्रश्न विचारा</button>
+    <div id="chat"></div>
+</div>
+
+<script>
+// Predefined Q&A in Marathi
+const qa = {
+    "बीज प्रक्रिया म्हणजे काय": "बीज प्रक्रिया म्हणजे बियाणे पेरणीपूर्वी कवकनाशक किंवा कीटकनाशकाने प्रक्रिया करणे.",
+    "बीज प्रक्रिया का करावी": "यामुळे बियाण्यांचे उगवण प्रमाण वाढते व रोगांपासून संरक्षण होते.",
+    "कुठले औषध वापरावे": "धानासाठी थायरम, कार्बेन्डाझिम किंवा ट्रायकोडर्मा वापरतात.",
+    "बीज प्रक्रियेची पद्धत": "निवडलेले बियाणे औषधाच्या प्रमाणात मिसळून सावलीत वाळवून घ्यावे."
+};
+
+function startListening() {
+    if (!('webkitSpeechRecognition' in window)) {
+        alert("तुमच्या ब्राउजरमध्ये voice input सपोर्ट नाही.");
+        return;
+    }
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = "mr-IN";
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript.trim();
+        document.getElementById("chat").innerHTML += "<div class='question'>❓ " + transcript + "</div>";
+        let found = false;
+        for (let key in qa) {
+            if (transcript.includes(key)) {
+                document.getElementById("chat").innerHTML += "<div class='answer'>💡 " + qa[key] + "</div>";
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            document.getElementById("chat").innerHTML += "<div class='answer'>माफ करा, या प्रश्नाचे उत्तर सध्या उपलब्ध नाही.</div>";
+        }
+    };
+    recognition.start();
+}
+</script>
+
+</body>
+</html>
